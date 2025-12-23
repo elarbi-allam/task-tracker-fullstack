@@ -24,7 +24,7 @@ public class ProjectController {
     ) {
         return ResponseEntity.ok(projectService.createProject(projectDTO, userDetails.getUsername()));
     }
-    
+
     @GetMapping
     public ResponseEntity<Page<ProjectDTO>> getUserProjects(
             @RequestParam(defaultValue = "0") int page,

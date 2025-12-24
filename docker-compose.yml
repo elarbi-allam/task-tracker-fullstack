@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  # Service 1 : Ton Backend
+  backend:
+    image: elarbiallam/task-tracker-backend:v1
+    container_name: task-tracker-backend
+    ports:
+      - "8080:8080"
+    environment:
+      # Ici, on utilise "db" comme nom d'hôte car Docker gère le DNS entre les services
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/task_tracker_db
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=secure_password
+      - JWT_SECRET=Q2zDqSBzZWNyw6h0ZSBwb3VyIGxlIHN0YWdlIGNoZXogSGFobiBTb2Z0d2FyZSBNYXJvYw==
+      - JWT_EXPIRATION=86400000
+    depends_on:
+      - db
+
+  # Service 2 : La Base de Données (Isolée dans Docker)
+  db:
+    image: postgres:15-alpine
+    container_name: task-tracker-db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=secure_password
+      - POSTGRES_DB=task_tracker_db
+    ports:
+      - "5433:5432" # J'utilise 5433 pour éviter un conflit avec ton Postgres local
+    volumes:
+      - postgres_data:/var/lib/postgresql/data # VOICI LE VOLUME !
+
+# Définition du volume persistant
+volumes:
+  postgres_data:

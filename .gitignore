@@ -1,0 +1,46 @@
+# Root .gitignore — common project artifacts
+
+# Node / frontend
+node_modules/
+/frontend/node_modules/
+/frontend/dist/
+/dist/
+
+# Build outputs
+/target/
+/backend/target/
+*.jar
+
+# Maven wrapper
+.mvn/wrapper/maven-wrapper.jar
+
+# Environment files and local overrides
+.env
+.env.*.local
+.env.local
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+
+# IDEs
+.vscode/
+.idea/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# TypeScript
+*.tsbuildinfo
+
+# Coverage
+coverage/
+
+# Docker compose override (if any local override exists)
+docker-compose.override.yml
+
+# Misc
+.vagrant/

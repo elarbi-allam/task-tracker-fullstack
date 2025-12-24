@@ -1,23 +1,28 @@
-version: '3.8'
+version: "3.8"
 
 services:
-  # Service 1 : Ton Backend
+  # 1. Backend : On build depuis le dossier ./backend
   backend:
-    image: elarbiallam/task-tracker-backend:v1
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
     container_name: task-tracker-backend
     ports:
       - "8080:8080"
     environment:
-      # Ici, on utilise "db" comme nom d'hôte car Docker gère le DNS entre les services
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/task_tracker_db
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=secure_password
       - JWT_SECRET=Q2zDqSBzZWNyw6h0ZSBwb3VyIGxlIHN0YWdlIGNoZXogSGFobiBTb2Z0d2FyZSBNYXJvYw==
       - JWT_EXPIRATION=86400000
+      - CORS_ALLOWED_ORIGINS=http://localhost:5173,http://127.0.0.1:5173,http://localhost:3000,http://host.docker.internal:5173
+      - DB_NAME=task_tracker_db
+      - DB_USER=postgres
+      - DB_PASSWORD=secure_password
     depends_on:
       - db
 
-  # Service 2 : La Base de Données (Isolée dans Docker)
+  # 2. Database : On utilise l'image officielle (pas de build nécessaire)
   db:
     image: postgres:15-alpine
     container_name: task-tracker-db
@@ -26,10 +31,26 @@ services:
       - POSTGRES_PASSWORD=secure_password
       - POSTGRES_DB=task_tracker_db
     ports:
-      - "5433:5432" # J'utilise 5433 pour éviter un conflit avec ton Postgres local
+      - "5433:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data # VOICI LE VOLUME !
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
 
-# Définition du volume persistant
+  # 3. Frontend : On build depuis le dossier ./frontend
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: task-tracker-frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+
 volumes:
   postgres_data:

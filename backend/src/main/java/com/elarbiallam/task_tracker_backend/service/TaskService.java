@@ -6,7 +6,7 @@ import org.springframework.data.domain.Page;
 
 public interface TaskService {
     TaskDTO createTask(Long projectId, TaskDTO taskDTO, String userEmail);
-    Page<TaskDTO> getTasksByProjectId(Long projectId, TaskStatus status, int page, int size, String userEmail);
+    Page<TaskDTO> getTasksByProjectId(Long projectId, TaskStatus status, int page, int size, String userEmail , String sortTitle);
     TaskDTO updateTask(Long taskId, TaskDTO taskDTO, String userEmail);
     void deleteTask(Long taskId, String userEmail);
 }

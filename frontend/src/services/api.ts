@@ -32,15 +32,16 @@ api.interceptors.response.use(
     if (error.response?.status === 401) {
       // Don't auto-redirect for auth endpoints (login/register) so the page can
       // display the error message without being forcefully reloaded.
-      const reqUrl = (error.config as InternalAxiosRequestConfig | undefined)?.url || '';
-      if (reqUrl.includes('/auth/login') || reqUrl.includes('/auth/register')) {
+      const reqUrl =
+        (error.config as InternalAxiosRequestConfig | undefined)?.url || "";
+      if (reqUrl.includes("/auth/login") || reqUrl.includes("/auth/register")) {
         return Promise.reject(error);
       }
 
-      localStorage.removeItem('token');
+      localStorage.removeItem("token");
       // Only redirect if we're not already on the login page
-      if (window.location.pathname !== '/login') {
-        window.location.href = '/login';
+      if (window.location.pathname !== "/login") {
+        window.location.href = "/login";
       }
     }
     return Promise.reject(error);

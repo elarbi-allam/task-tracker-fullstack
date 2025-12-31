@@ -43,10 +43,15 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<TaskDTO> getTasksByProjectId(Long projectId, TaskStatus status, int page, int size, String userEmail) {
+    public Page<TaskDTO> getTasksByProjectId(Long projectId, TaskStatus status, int page, int size, String userEmail, String sortTitle) {
         getProjectCheckOwner(projectId, userEmail); // Vérif sécurité
 
         Pageable pageable = PageRequest.of(page, size, Sort.by("dueDate").ascending()); // Tri par date d'échéance
+        if(sortTitle.equals("sort")){
+            pageable = PageRequest.of(page, size, Sort.by("title").ascending());
+        }
+
+
 
         Page<Task> taskPage;
         if (status != null) {

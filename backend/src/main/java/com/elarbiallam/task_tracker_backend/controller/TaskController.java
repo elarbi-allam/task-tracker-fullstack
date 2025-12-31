@@ -33,9 +33,10 @@ public class TaskController {
             @RequestParam(required = false) TaskStatus status,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "false") String sortTitle,
             @AuthenticationPrincipal UserDetails userDetails
     ) {
-        return ResponseEntity.ok(taskService.getTasksByProjectId(projectId, status, page, size, userDetails.getUsername()));
+        return ResponseEntity.ok(taskService.getTasksByProjectId(projectId, status, page, size, userDetails.getUsername(), sortTitle));
     }
 
     @PatchMapping("/{taskId}")
